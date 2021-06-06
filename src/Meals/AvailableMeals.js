@@ -6,6 +6,8 @@ import MealItem from './MealsItem/MealItem';
 
 const AvailableMeals = () => {
   const [meals, setMeals] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [httpError, setHttpError] = useState();
 
   useEffect(() => {
     const loadData = async function () {
@@ -31,11 +33,28 @@ const AvailableMeals = () => {
         }
         setMeals(loadedMeals);
       } catch (error) {
-        console.log(error.message);
+        setHttpError(error.message);
       }
     };
     loadData();
+    setIsLoading(false);
   }, []);
+
+  if (isLoading) {
+    return (
+      <section className={styles.loading}>
+        <p>Loading...</p>
+      </section>
+    );
+  }
+
+  if (httpError) {
+    return (
+      <section className={styles.error}>
+        <p>{httpError}!</p>
+      </section>
+    );
+  }
 
   const reactMeals = meals.map(meal => (
     <MealItem
