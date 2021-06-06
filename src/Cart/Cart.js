@@ -27,6 +27,19 @@ const Cart = props => {
 
   const showCheckOutFormHandler = () => setIsCheckout(true);
 
+  const submitDataHandler = userData => {
+    fetch(
+      'https://food-order-application-8d176-default-rtdb.firebaseio.com/meals.json',
+      {
+        method: 'POST',
+        body: JSON.stringify({
+          user: userData,
+          orderItems: cartCtx.items,
+        }),
+      }
+    );
+  };
+
   const cartItems = (
     <ul className={styles['cart-items']}>
       {cartCtx.items.map(item => (
@@ -62,7 +75,9 @@ const Cart = props => {
         <span>Total Amount</span>
         <span>{totalAmount}</span>
       </div>
-      {isCheckout && <Checkout onClose={props.onHideCart} />}
+      {isCheckout && (
+        <Checkout onConfirm={submitDataHandler} onClose={props.onHideCart} />
+      )}
       {!isCheckout && buttons}
     </Modal>
   );
