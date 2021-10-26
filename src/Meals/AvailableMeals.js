@@ -51,7 +51,7 @@ const AvailableMeals = () => {
   if (httpError) {
     return (
       <section className={styles.error}>
-        <p>{httpError}!</p>
+        <p>{httpError}</p>
       </section>
     );
   }
