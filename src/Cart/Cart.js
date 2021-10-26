@@ -44,6 +44,7 @@ const Cart = props => {
     );
     setDidSubmitted(true);
     setIsSubmitting(false);
+    cartCtx.emptyCart();
   };
 
   const cartItems = (
@@ -90,7 +91,16 @@ const Cart = props => {
 
   const sendingContent = <p>Sending data...</p>;
 
-  const submittedData = <p>Submitted data</p>;
+  const submittedData = (
+    <React.Fragment>
+      <p>Submitted data</p>
+      <div className={styles.actions}>
+        <button onClick={props.onHideCart} className={styles['button--alt']}>
+          Close
+        </button>
+      </div>
+    </React.Fragment>
+  );
 
   return (
     <Modal onClose={props.onHideCart}>
