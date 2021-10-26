@@ -8,6 +8,8 @@ import Modal from '../UI/Modal';
 
 const Cart = props => {
   const [isCheckout, setIsCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [didSubmit, setDidSubmitted] = useState(false);
 
   const cartCtx = useContext(CartContext);
 
@@ -28,8 +30,10 @@ const Cart = props => {
   const showCheckOutFormHandler = () => setIsCheckout(true);
 
   const submitDataHandler = userData => {
+    setIsSubmitting(true);
+    setDidSubmitted(false);
     fetch(
-      'https://food-order-application-8d176-default-rtdb.firebaseio.com/meals.json',
+      'https://food-order-application-8d176-default-rtdb.firebaseio.com/order.json',
       {
         method: 'POST',
         body: JSON.stringify({
@@ -38,6 +42,8 @@ const Cart = props => {
         }),
       }
     );
+    setDidSubmitted(true);
+    setIsSubmitting(false);
   };
 
   const cartItems = (
@@ -68,8 +74,8 @@ const Cart = props => {
     </div>
   );
 
-  return (
-    <Modal onClose={props.onHideCart}>
+  const content = (
+    <React.Fragment>
       {cartItems}
       <div className={styles.total}>
         <span>Total Amount</span>
@@ -79,6 +85,18 @@ const Cart = props => {
         <Checkout onConfirm={submitDataHandler} onClose={props.onHideCart} />
       )}
       {!isCheckout && buttons}
+    </React.Fragment>
+  );
+
+  const sendingContent = <p>Sending data...</p>;
+
+  const submittedData = <p>Submitted data</p>;
+
+  return (
+    <Modal onClose={props.onHideCart}>
+      {!isSubmitting && !didSubmit && content}
+      {isSubmitting && sendingContent}
+      {!isSubmitting && didSubmit && submittedData}
     </Modal>
   );
 };
